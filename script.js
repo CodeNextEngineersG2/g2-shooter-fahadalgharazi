@@ -1,5 +1,11 @@
+
+
+
+
 // UI Variables
 var canvas;
+var canvasWidth;
+var canvasHeight;
 var gameScreen;
 var scoreDisplay;
 
@@ -40,7 +46,21 @@ var alienBulletY;
  * variables by calling resetGame().
  */
 
-
+function setup(){
+	canvasWidth =500;
+	canvasHeight =400;
+    canvas = createCanvas(canvasWidth,canvasHeight);
+    background(0,255,255);
+    gameScreen=select("#game-screen");
+    canvas.parent(gameScreen);
+    shipColor=21;
+    shipY=360;
+    shipX=250;
+    shipSpeed=10.;
+    shipDiameter=40;
+    bulletDiameter=10;
+    shipShooting=false;
+}
 /*
  * gameOver()
  * This function stops the game from running and shows an alert telling the
@@ -61,15 +81,36 @@ var alienBulletY;
  * This function animates the ship, alien, and both kinds of bullets, but only
  * if the game is running.
  */
+function draw(){
+    background(0,255,255);
+    drawShip();
+    if (shipShooting==true) {
+        drawBullet();
+    }
 
+ 	
+
+}
 
 /*
  * drawShip()
  * This function draws the player's ship. It also controls the ship's
  * x value by checking if the player is holding down the left or right keys.
  */
+ function drawShip(){
+ 	fill(0, 0, 0);
+ 	ellipse(shipX,shipY,shipDiameter,60);
 
+ 	if(keyIsDown(LEFT_ARROW)&& shipX>20){
+ 		shipX-=shipSpeed;
+ 	}
 
+    else if(keyIsDown(RIGHT_ARROW)&& shipX<480) {
+        shipX+=shipSpeed;
+
+    }
+}
+ 
 /*
  * keyPressed()
  * This function runs automatically when the player presses the spacebar
@@ -78,6 +119,23 @@ var alienBulletY;
  * ship. Then it sets the "shipShooting" variable to "true", indicating a ship
  * bullet is currently being fired.
  */
+function keyPressed(){
+   if (keyCode===32 && shipShooting == false) {
+
+        bulletX=shipX;
+        
+        bulletY=shipY;
+
+        shipShooting=true;
+
+    }
+    else{
+        shipShooting=false;
+
+    }
+    
+}
+
 
 
 /*
@@ -87,6 +145,22 @@ var alienBulletY;
  * and the player earns a point. The alien aslo becomes faster (i.e., harder
  * to hit) each time it is hit by a bullet.
  */
+ function drawBullet() {
+    if (bulletY > 0) {
+        fill(199,53,38);
+        ellipse(bulletX,bulletY,bulletDiameter,30);
+         bulletY -= 10;
+         shipShooting=true;
+    }
+   
+    else{
+        shipShooting=false
+    }
+
+
+
+    
+ }
 
 
 /*
